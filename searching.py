@@ -8,10 +8,7 @@ def read_data(filename, field):
 
     if field in data:
         return data[field]
-    else:
-        return None
-
-
+    return None
 
 
 def linear_search(sequence, target):
@@ -26,13 +23,36 @@ def linear_search(sequence, target):
     return {"positions": positions, "count": len(positions)}
 
 
+def binary_search(sequence, target):
+    left = 0
+    right = len(sequence) - 1
+
+    while left <= right:
+        middle = (left + right) // 2
+
+        if sequence[middle] == target:
+            return middle
+        elif sequence[middle] < target:
+            left = middle + 1
+        else:
+            right = middle - 1
+
+    return None
+
+
 def main():
-    data = read_data("sequential.json", "unordered_numbers")
+    data = read_data("sequential.json", "ordered_numbers")
     target = 5
 
-    result = linear_search(data, target)
+    if data is None:
+        print("chyba")
+        return
+
+    result = binary_search(data, target)
     print(result)
 
 
 if __name__ == "__main__":
     main()
+
+
