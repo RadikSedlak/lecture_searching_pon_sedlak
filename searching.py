@@ -42,6 +42,27 @@ def binary_search(sequence, target):
     return None
 
 
+def pattern_search(sequence, pattern):
+    positions = set()
+
+    n = len(sequence)
+    m = len(pattern)
+
+    for i in range(n - m + 1):
+
+        match = True
+
+        for j in range(m):
+            if sequence[i + j] != pattern[j]:
+                match = False
+                break
+
+        if match:
+            positions.add(i)
+
+    return positions
+
+
 def main():
     sizes = [100, 500, 1000, 5000, 10000]
 
@@ -71,6 +92,14 @@ def main():
     plt.legend()
 
     plt.show()
+
+
+    dna = read_data("sequential.json", "dna_sequence")
+    pattern = "ATA"
+
+    result = pattern_search(dna, pattern)
+
+    print("pattern search result:", result)
 
 
 if __name__ == "__main__":
