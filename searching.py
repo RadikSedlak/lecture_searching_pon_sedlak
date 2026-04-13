@@ -1,9 +1,17 @@
-from pathlib import Path
-
-
+import json
 import time
 import matplotlib.pyplot as plt
 from generators import ordered_sequence
+
+
+def read_data(filename, field):
+    f = open(filename, "r", encoding="utf-8")
+    data = json.load(f)
+    f.close()
+
+    if field in data:
+        return data[field]
+    return None
 
 
 def linear_search(sequence, target):
@@ -26,46 +34,44 @@ def binary_search(sequence, target):
 
         if sequence[middle] == target:
             return middle
-
         elif sequence[middle] < target:
             left = middle + 1
-
         else:
             right = middle - 1
 
     return None
 
 
-sizes = [100, 500, 1000, 5000, 10000]
+def main():
+    sizes = [100, 500, 1000, 5000, 10000]
 
-linear_times = []
-binary_times = []
+    linear_times = []
+    binary_times = []
 
-for size in sizes:
-    data = ordered_sequence(size)
-    target = data[-1]
+    for size in sizes:
+        data = ordered_sequence(size)
+        target = data[-1]
 
-    start = time.perf_counter()
-    result_linear = linear_search(data, target)
-    end = time.perf_counter()
-    linear_times.append(end - start)
+        start = time.perf_counter()
+        linear_search(data, target)
+        linear_times.append(time.perf_counter() - start)
 
-    start = time.perf_counter()
-    result_binary = binary_search(data, target)
-    end = time.perf_counter()
-    binary_times.append(end - start)
+        start = time.perf_counter()
+        binary_search(data, target)
+        binary_times.append(time.perf_counter() - start)
 
-    print("size:", size)
-    print("linear result:", result_linear)
-    print("binary result:", result_binary)
-    print("---")
+        print("size:", size)
 
-plt.plot(sizes, linear_times, label="linear search")
-plt.plot(sizes, binary_times, label="binary search")
+    plt.plot(sizes, linear_times, label="linear search")
+    plt.plot(sizes, binary_times, label="binary search")
 
-plt.xlabel("velikost vstupu")
-plt.ylabel("čas (sekundy)")
-plt.title("Porovnání rychlosti vyhledávání")
-plt.legend()
+    plt.xlabel("velikost vstupu")
+    plt.ylabel("čas [s]")
+    plt.title("porovnání vyhledávání")
+    plt.legend()
 
-plt.show()
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
