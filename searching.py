@@ -3,7 +3,7 @@ from pathlib import Path
 
 import time
 import matplotlib.pyplot as plt
-from generator import ordered_sequences
+from generators import ordered_sequence
 
 
 def linear_search(sequence, target):
@@ -42,7 +42,7 @@ linear_times = []
 binary_times = []
 
 for size in sizes:
-    data = ordered_sequences(size)
+    data = ordered_sequence(size)
     target = data[-1]
 
     start = time.perf_counter()
