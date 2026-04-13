@@ -1,26 +1,20 @@
 from pathlib import Path
-import json
 
-def read_data(filename, field):
-    f = open(filename, "r", encoding="utf-8")
-    data = json.load(f)
-    f.close()
 
-    if field in data:
-        return data[field]
-    return None
+import time
+import matplotlib.pyplot as plt
+from generator import ordered_sequences
 
 
 def linear_search(sequence, target):
-    positions = []
     i = 0
 
-    for item in sequence:
-        if item == target:
-            positions.append(i)
+    for number in sequence:
+        if number == target:
+            return i
         i = i + 1
 
-    return {"positions": positions, "count": len(positions)}
+    return None
 
 
 def binary_search(sequence, target):
@@ -32,27 +26,46 @@ def binary_search(sequence, target):
 
         if sequence[middle] == target:
             return middle
+
         elif sequence[middle] < target:
             left = middle + 1
+
         else:
             right = middle - 1
 
     return None
 
 
-def main():
-    data = read_data("sequential.json", "ordered_numbers")
-    target = 5
+sizes = [100, 500, 1000, 5000, 10000]
 
-    if data is None:
-        print("chyba")
-        return
+linear_times = []
+binary_times = []
 
-    result = binary_search(data, target)
-    print(result)
+for size in sizes:
+    data = ordered_sequences(size)
+    target = data[-1]
 
+    start = time.perf_counter()
+    result_linear = linear_search(data, target)
+    end = time.perf_counter()
+    linear_times.append(end - start)
 
-if __name__ == "__main__":
-    main()
+    start = time.perf_counter()
+    result_binary = binary_search(data, target)
+    end = time.perf_counter()
+    binary_times.append(end - start)
 
+    print("size:", size)
+    print("linear result:", result_linear)
+    print("binary result:", result_binary)
+    print("---")
 
+plt.plot(sizes, linear_times, label="linear search")
+plt.plot(sizes, binary_times, label="binary search")
+
+plt.xlabel("velikost vstupu")
+plt.ylabel("čas (sekundy)")
+plt.title("Porovnání rychlosti vyhledávání")
+plt.legend()
+
+plt.show()
